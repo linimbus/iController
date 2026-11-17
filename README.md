@@ -119,6 +119,27 @@ curl -X POST http://localhost:8788/api/flows/<flowId>/trigger \
 - 信号未配置事件时，沿用上游传入的事件名；载荷按「信号默认载荷 ⊕ 触发载荷」合并
 - 防风暴：单条消息最大 16 跳、单单元单次触发最多接收 8 次、事件上限 500 条，环路会输出警告日志
 
+## Docker 部署
+
+多阶段构建：前端 Vite 产物 + Express 后端打包为**单镜像单端口**（8788），数据通过卷持久化。
+
+```bash
+# 方式一：构建脚本（含构建后健康检查，--run 顺便跑起来）
+./build-docker.sh v1.0.0 --run
+
+# 方式二：docker compose
+docker compose up -d
+
+# 方式三：纯 docker
+docker build -t icontroller:latest .
+docker run -d --name icontroller -p 8788:8788 -v icontroller-data:/app/data icontroller:latest
+```
+
+- 镜像基于 `node:22-alpine`，内置 HEALTHCHECK（`/api/health`）
+- 容器内监听 `::`（IPv6/IPv4 双栈）；数据文件 `db.json` 位于 `/app/data`，务必挂载卷
+- 生产模式下 Express 自动托管前端静态资源并支持 SPA 路由回退（`PUBLIC_DIR` 可覆盖路径）
+- 推送镜像：`REGISTRY=registry.example.com/team ./build-docker.sh v1.0.0`
+
 ## 技术说明
 
 - 前端画布基于 [@xyflow/react](https://reactflow.dev/)（React Flow v12），自定义节点内嵌多端口 Handle

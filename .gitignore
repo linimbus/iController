@@ -1,0 +1,15 @@
+# 依赖
+server/node_modules
+web/node_modules
+
+# 构建产物
+web/dist
+
+# 运行时数据（模型/流程持久化文件）
+server/data
+
+# 助手工作区数据
+.workbuddy
+
+# 系统文件
+.DS_Store

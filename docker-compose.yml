@@ -1,0 +1,14 @@
+services:
+  icontroller:
+    build: .
+    image: icontroller:latest
+    container_name: icontroller
+    ports:
+      - "8788:8788"
+    volumes:
+      # 数据持久化：模型 / 流程 / 运行时状态（db.json）
+      - icontroller-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  icontroller-data:

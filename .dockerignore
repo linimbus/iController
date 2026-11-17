@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+**/dist
+**/.git
+**/.DS_Store
+server/data
+web/dist
+.workbuddy
+*.md
+docker-compose*.yml
+build-docker.sh
